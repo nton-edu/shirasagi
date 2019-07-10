@@ -8,10 +8,10 @@ PORT_OPEND=8003
 PORT_LPSPL=8004
 
 # selinux 
-sudo sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
-sudo setenforce 0
+sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
+setenforce 0
 
-cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
+cat <<EOS | tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
 [mongodb-org-3.4]
 name=MongoDB Repository
 baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/3.4/x86_64/
@@ -20,11 +20,11 @@ enabled=0
 gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 EOS
 
-sudo yum install -y --enablerepo=mongodb-org-3.4 mongodb-org
-sudo systemctl start mongod.service
-sudo systemctl enable mongod.service
+yum install -y --enablerepo=mongodb-org-3.4 mongodb-org
+systemctl start mongod.service
+systemctl enable mongod.service
 
-sudo yum -y install \
+yum -y install \
   gcc gcc-c++ glibc-headers \
   openssl-devel readline libyaml-devel readline-devel zlib zlib-devel \
   wget git ImageMagick ImageMagick-devel
@@ -53,8 +53,8 @@ gem install bundler
 if [ ! `which ruby` ]; then exit 1; fi
 
 git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
-sudo mkdir -p /var/www
-sudo mv shirasagi $SS_DIR
+mkdir -p /var/www
+mv shirasagi $SS_DIR
 
 cd $SS_DIR
 cp -n config/samples/*.{rb,yml} config/
@@ -73,14 +73,14 @@ sed -i "s/dbcae379.*$/`bundle exec rake secret`/" config/secrets.yml
 # enable recommendation
 sed -e "s/disable: true$/disable: false/" config/defaults/recommend.yml > config/recommend.yml
 
-sudo firewall-cmd --add-port=http/tcp --permanent
-#sudo firewall-cmd --add-port=https/tcp --permanent
-#sudo firewall-cmd --add-port=3000/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_COMPA}/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_CHILD}/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_OPEND}/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_LPSPL}/tcp --permanent
-sudo firewall-cmd --reload
+firewall-cmd --add-port=http/tcp --permanent
+#firewall-cmd --add-port=https/tcp --permanent
+#firewall-cmd --add-port=3000/tcp --permanent
+firewall-cmd --add-port=${PORT_COMPA}/tcp --permanent
+firewall-cmd --add-port=${PORT_CHILD}/tcp --permanent
+firewall-cmd --add-port=${PORT_OPEND}/tcp --permanent
+firewall-cmd --add-port=${PORT_LPSPL}/tcp --permanent
+firewall-cmd --reload
 
 #### Furigana
 
@@ -96,9 +96,9 @@ tar xvzf mecab-0.996.tar.gz
 cd mecab-0.996
 ./configure --enable-utf8-only
 make
-sudo make install
+make install
 #cd
-#sudo mv mecab-0.996 /usr/local/src
+#mv mecab-0.996 /usr/local/src
 
 cd
 tar xvzf mecab-ipadic-2.7.0-20070801.tar.gz
@@ -106,21 +106,21 @@ cd mecab-ipadic-2.7.0-20070801
 patch -p1 < ../mecab-ipadic-2.7.0-20070801.patch
 ./configure --with-charset=UTF-8
 make
-sudo make install
+make install
 #cd
-#sudo mv mecab-ipadic-2.7.0-20070801 /usr/local/src
+#mv mecab-ipadic-2.7.0-20070801 /usr/local/src
 
 cd
 tar xvzf mecab-ruby-0.996.tar.gz
 cd mecab-ruby-0.996
 ruby extconf.rb
 make
-sudo make install
+make install
 #cd
-#sudo mv mecab-ruby-0.996 /usr/local/src
+#mv mecab-ruby-0.996 /usr/local/src
 
-echo "/usr/local/lib" | sudo tee -a /etc/ld.so.conf
-sudo ldconfig
+echo "/usr/local/lib" | tee -a /etc/ld.so.conf
+ldconfig
 
 #### Voice
 
@@ -135,9 +135,9 @@ tar xvzf hts_engine_API-1.08.tar.gz
 cd hts_engine_API-1.08
 ./configure
 make
-sudo make install
+make install
 #cd
-#sudo mv hts_engine_API-1.08 /usr/local/src
+#mv hts_engine_API-1.08 /usr/local/src
 
 cd
 tar xvzf open_jtalk-1.07.tar.gz
@@ -146,33 +146,33 @@ sed -i "s/#define MAXBUFLEN 1024/#define MAXBUFLEN 10240/" bin/open_jtalk.c
 sed -i "s/0x00D0 SPACE/0x000D SPACE/" mecab-naist-jdic/char.def
 ./configure --with-charset=UTF-8
 make
-sudo make install
+make install
 #cd
-#sudo mv open_jtalk-1.07 /usr/local/src
+#mv open_jtalk-1.07 /usr/local/src
 
 cd
 tar xvzf lame-3.99.5.tar.gz
 cd lame-3.99.5
 ./configure
 make
-sudo make install
+make install
 #cd
-#sudo mv lame-3.99.5 /usr/local/src
+#mv lame-3.99.5 /usr/local/src
 
 cd
 tar xvzf sox-14.4.1.tar.gz
 cd sox-14.4.1
 ./configure
 make
-sudo make install
+make install
 #cd
-#sudo mv sox-14.4.1 /usr/local/src
+#mv sox-14.4.1 /usr/local/src
 
-sudo ldconfig
+ldconfig
 
 #### Nginx
 
-cat << EOF | sudo tee /etc/yum.repos.d/nginx.repo
+cat << EOF | tee /etc/yum.repos.d/nginx.repo
 [nginx]
 name=nginx repo
 baseurl=http://nginx.org/packages/centos/\$releasever/\$basearch/
@@ -180,12 +180,12 @@ gpgcheck=0
 enabled=0
 EOF
 
-sudo yum -y --enablerepo=nginx install nginx
-#sudo nginx -t
-sudo systemctl start nginx.service
-sudo systemctl enable nginx.service
+yum -y --enablerepo=nginx install nginx
+#nginx -t
+systemctl start nginx.service
+systemctl enable nginx.service
 
-cat <<EOF | sudo tee /etc/nginx/conf.d/http.conf
+cat <<EOF | tee /etc/nginx/conf.d/http.conf
 server_tokens off;
 server_name_in_redirect off;
 etag off;
@@ -228,7 +228,7 @@ proxy_cache_lock on;
 proxy_cache_lock_timeout 5s;
 EOF
 
-cat <<EOF | sudo tee /etc/nginx/conf.d/header.conf
+cat <<EOF | tee /etc/nginx/conf.d/header.conf
 proxy_set_header Host \$host;
 proxy_set_header X-Real-IP \$remote_addr;
 proxy_set_header Remote-Addr \$remote_addr;
@@ -243,15 +243,15 @@ proxy_hide_header Link;
 proxy_hide_header ETag;
 EOF
 
-sudo mkdir /etc/nginx/conf.d/common/
-cat <<EOF | sudo tee /etc/nginx/conf.d/common/drop.conf
+mkdir /etc/nginx/conf.d/common/
+cat <<EOF | tee /etc/nginx/conf.d/common/drop.conf
 location = /favicon.ico                      { expires 1h; access_log off; log_not_found off; }
 location = /robots.txt                       { expires 1h; access_log off; log_not_found off; }
 location = /apple-touch-icon.png             { expires 1h; access_log off; log_not_found off; }
 location = /apple-touch-icon-precomposed.png { expires 1h; access_log off; log_not_found off; }
 EOF
 
-cat <<EOF | sudo tee /etc/nginx/conf.d/virtual.conf
+cat <<EOF | tee /etc/nginx/conf.d/virtual.conf
 server {
     include conf.d/server/shirasagi.conf;
     server_name ${SS_HOSTNAME};
@@ -283,8 +283,8 @@ server {
 }
 EOF
 
-sudo mkdir /etc/nginx/conf.d/server/
-cat <<EOF | sudo tee /etc/nginx/conf.d/server/shirasagi.conf
+mkdir /etc/nginx/conf.d/server/
+cat <<EOF | tee /etc/nginx/conf.d/server/shirasagi.conf
 include conf.d/common/drop.conf;
 error_page 404 /404.html;
 
@@ -309,7 +309,7 @@ location /private_files/ {
 }
 EOF
 
-sudo systemctl restart nginx.service
+systemctl restart nginx.service
 
 cd $SS_DIR
 bundle exec rake db:drop
@@ -341,7 +341,7 @@ EOF
 
 # modify ImageMagick policy to work with simple captcha
 # see: https://github.com/diaspora/diaspora/issues/6828
-cd /etc/ImageMagick && cat << EOF | sudo patch
+cd /etc/ImageMagick && cat << EOF | patch
 --- policy.xml.orig     2016-12-08 13:50:47.344009000 +0900
 +++ policy.xml  2016-12-08 13:15:22.529009000 +0900
 @@ -67,6 +67,8 @@
@@ -358,7 +358,7 @@ EOF
 
 #### daemonize
 
-cat <<EOF | sudo tee /etc/systemd/system/shirasagi-unicorn.service
+cat <<EOF | tee /etc/systemd/system/shirasagi-unicorn.service
 [Unit]
 Description=Shirasagi Unicorn Server
 After=mongod.service
@@ -379,8 +379,8 @@ ExecReload=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:restart
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo chown root: /etc/systemd/system/shirasagi-unicorn.service
-sudo chmod 644 /etc/systemd/system/shirasagi-unicorn.service
-sudo systemctl daemon-reload
-sudo systemctl enable shirasagi-unicorn.service
-sudo systemctl start shirasagi-unicorn.service
+chown root: /etc/systemd/system/shirasagi-unicorn.service
+chmod 644 /etc/systemd/system/shirasagi-unicorn.service
+systemctl daemon-reload
+systemctl enable shirasagi-unicorn.service
+systemctl start shirasagi-unicorn.service
