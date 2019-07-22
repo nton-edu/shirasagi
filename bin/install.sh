@@ -314,16 +314,17 @@ systemctl restart nginx.service
 cd $SS_DIR
 bundle exec rake db:drop
 bundle exec rake db:create_indexes
-bundle exec rake ss:create_site data="{ name: \"自治体サンプル\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
-bundle exec rake ss:create_site data="{ name: \"企業サンプル\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
-bundle exec rake ss:create_site data="{ name: \"子育て支援サンプル\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"
-bundle exec rake ss:create_site data="{ name: \"オープンデータサンプル\", host: \"opendata\", domains: \"${SS_HOSTNAME}:${PORT_OPEND}\" }"
-bundle exec rake ss:create_site data="{ name: \"ＬＰサンプル\", host: \"lp_\", domains: \"${SS_HOSTNAME}:${PORT_LPSPL}\" }"
-bundle exec rake db:seed name=demo site=www
-bundle exec rake db:seed name=company site=company
-bundle exec rake db:seed name=childcare site=childcare
-bundle exec rake db:seed name=opendata site=opendata
-bundle exec rake db:seed name=lp site=lp_
+# bundle exec rake ss:create_site data="{ name: \"自治体サンプル\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
+# bundle exec rake ss:create_site data="{ name: \"企業サンプル\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
+# bundle exec rake ss:create_site data="{ name: \"子育て支援サンプル\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"
+# undle exec rake ss:create_site data="{ name: \"オープンデータサンプル\", host: \"opendata\", domains: \"${SS_HOSTNAME}:${PORT_OPEND}\" }"
+# bundle exec rake ss:create_site data="{ name: \"ＬＰサンプル\", host: \"lp_\", domains: \"${SS_HOSTNAME}:${PORT_LPSPL}\" }"
+bundle exec rake ss:create_site data="{ name: \"ＬＰサンプル\", host: \"www", domains: \"${SS_HOSTNAME}\" }"
+# bundle exec rake db:seed name=demo site=www
+# bundle exec rake db:seed name=company site=company
+# bundle exec rake db:seed name=childcare site=childcare
+# bundle exec rake db:seed name=opendata site=opendata
+bundle exec rake db:seed name=lp site=www
 bundle exec rake db:seed name=gws
 bundle exec rake db:seed name=webmail
 bundle exec rake assets:precompile RAILS_ENV=production
